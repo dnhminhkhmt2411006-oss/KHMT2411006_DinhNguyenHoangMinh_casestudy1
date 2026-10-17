@@ -1,10 +1,18 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'Expense_Page.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
+import 'screens/dashboard_screen.dart';
 
 void main() {
-  runApp(const ExpenseManagerApp());
-}
+  WidgetsFlutterBinding.ensureInitialized();
 
+  if (kIsWeb) {
+    databaseFactory = databaseFactoryFfiWebNoWebWorker;
+  }
+
+  runApp(const ExpenseManagerApp());
+}          
 class ExpenseManagerApp extends StatelessWidget {
   const ExpenseManagerApp({super.key});
 
@@ -72,7 +80,7 @@ class ExpenseManagerApp extends StatelessWidget {
                           Navigator.pushReplacement(
                             innerContext,
                             MaterialPageRoute(
-                              builder: (context) => const MyApp(),
+                              builder: (context) => const DashboardScreen(),
                             ),
                           );
                         },
