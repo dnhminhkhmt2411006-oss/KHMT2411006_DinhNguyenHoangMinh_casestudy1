@@ -2,9 +2,9 @@ class TransactionModel {
   final int? id;
   final String title;
   final double amount;
-  final String type; // 'Thu' (Thu nhập) hoặc 'Chi' (Chi tiêu)
+  final String type; // 'income' (thu nhập) hoặc 'expense' (chi tiêu)
   final String category;
-  final String date; // Định dạng YYYY-MM-DD
+  final String date; // Chuỗi ISO 8601, ví dụ 2026-10-17T00:00:00.000
   final String? note;
 
   TransactionModel({
@@ -17,7 +17,8 @@ class TransactionModel {
     this.note,
   });
 
-  // Chuyển đối tượng Model thành Map để lưu vào SQLite
+  bool get isIncome => type == 'income';
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -30,16 +31,16 @@ class TransactionModel {
     };
   }
 
-  // Chuyển dữ liệu Map từ SQLite thành đối tượng Model
   factory TransactionModel.fromMap(Map<String, dynamic> map) {
     return TransactionModel(
-      id: map['id'],
-      title: map['title'],
-      amount: map['amount'],
-      type: map['type'],
-      category: map['category'],
-      date: map['date'],
-      note: map['note'],
+      id: map['id'] as int?,
+      title: map['title'] as String,
+      // ép qua num để không lỗi khi database trả về int thay vì double
+      amount: (map['amount'] as num).toDouble(),
+      type: map['type'] as String,
+      category: map['category'] as String,
+      date: map['date'] as String,
+      note: map['note'] as String?,
     );
   }
 }
