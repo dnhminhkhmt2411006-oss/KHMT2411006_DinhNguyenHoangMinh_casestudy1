@@ -1,0 +1,16 @@
+String formatVnd(num v) {
+  final s = v.abs().round().toString();
+  final buf = StringBuffer();
+  for (int i = 0; i < s.length; i++) {
+    if (i > 0 && (s.length - i) % 3 == 0) buf.write('.');
+    buf.write(s[i]);
+  }
+  return '${v < 0 ? '-' : ''}$buf ₫';
+}
+
+DateTime parseDate(String iso) => DateTime.tryParse(iso) ?? DateTime.now();
+
+String formatDate(String iso) {
+  final d = parseDate(iso);
+  return '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
+}

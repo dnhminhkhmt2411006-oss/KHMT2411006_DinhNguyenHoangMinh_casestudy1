@@ -6,7 +6,9 @@ import '../theme/app_theme.dart';
 import 'transaction_form_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+  /// Gọi khi bấm "Xem tất cả" (MainScreen dùng để chuyển sang tab Giao dịch)
+  final VoidCallback? onSeeAll;
+  const DashboardScreen({super.key, this.onSeeAll});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -120,7 +122,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       style:
                       TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   TextButton(
-                    onPressed: () {}, // sẽ nối sang màn Danh sách giao dịch
+                    onPressed: widget.onSeeAll,
                     child: const Text('Xem tất cả'),
                   ),
                 ],
@@ -143,23 +145,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         shape: const CircleBorder(),
         onPressed: () => _openForm(),
         child: const Icon(Icons.add),
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: 0,
-        backgroundColor: Colors.white,
-        onDestinationSelected: (i) {
-          if (i != 0) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Màn hình này sẽ làm ở bước sau')),
-            );
-          }
-        },
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Trang chủ'),
-          NavigationDestination(icon: Icon(Icons.receipt_long_outlined), selectedIcon: Icon(Icons.receipt_long), label: 'Giao dịch'),
-          NavigationDestination(icon: Icon(Icons.pie_chart_outline), selectedIcon: Icon(Icons.pie_chart), label: 'Thống kê'),
-          NavigationDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: 'Cá nhân'),
-        ],
       ),
     );
   }
@@ -279,7 +264,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final isIncome = _isIncome(t);
     final (icon, color) = _categoryStyle(t.category);
     final date = DateTime.tryParse(t.date);
-    final dateText = date == null ? t.date : DateFormat('dd/MM/yyyy').format(date);
+    final dateText =
+    date == null ? t.date : DateFormat('dd/MM/yyyy').format(date);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
